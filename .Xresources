@@ -1,0 +1,9 @@
+! Font settings for st terminal
+st.font: misc tamsyn:size=14
+!st.font: Terminus:size=14
+!st.font: cozette:size=13
+
+!st.font: Cartograph CF:size=14
+*.font: Misc Tamsyn:size=14
+! Transparency (0-1):
+st.alpha: 1

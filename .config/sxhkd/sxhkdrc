@@ -22,7 +22,7 @@ super + slash
 	fishmenu
 XF86Tools
 	fishmenu
-Print + shift
-	scrotselect
 Print
-	scrotfull
+	printscreen
+Print + shift
+	printscreen -s

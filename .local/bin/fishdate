@@ -1,0 +1,8 @@
+#!/bin/bash
+source ~/.cache/wal/colors.sh
+DATE=$(date '+%H:%M' )
+OSRSSTAT=$( cat /tmp/rl_state )
+#if [[ $OSRSSTAT = 'Wasting XP' ]]; then OUT=$DATE
+#else OUT=$OSRSSTAT
+#fi
+echo "^c$color12^$DATE "

@@ -1,0 +1,3 @@
+#!/bin/sh
+choice=$(yay -Pc | fzf --multi --preview-window=up --preview 'yay -Si {1}' | tr -d 'AUR' )
+yay -S $choice

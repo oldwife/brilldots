@@ -1,0 +1,21 @@
+#!/bin/bash
+source ~/.cache/wal/colors.sh
+
+wf=$(nmcli -g GENERAl.STATE device show | grep -wo -m 1 "connected\|disconnected")
+ss=$(iw dev wlp59s0 link | grep 'dBm$' | grep -Eoe '-[0-9]{2}' | awk '{print  ($1 > -50 ? 100 :($1 < -100 ? 0 : ($1+100)*2))}')
+
+#if   [[ $ss -ge "80" ]]; then si="@"
+#elif [[ $ss -ge "70" ]]; then si="ª"
+#elif [[ $ss -ge "60" ]]; then si="³"
+#elif [[ $ss -ge "40" ]]; then si="²"
+#elif [[ $ss -ge "20" ]]; then si="¹"
+#elif [[ $ss -ge "1"  ]]; then si="°"
+#elif [[ $wf = "disconnected" ]]; then si=""
+#fi
+
+if [[ $wf = "connected" ]]; then wi="@"
+else wi="~"
+fi
+
+
+echo "^c$color11^$wi~"
