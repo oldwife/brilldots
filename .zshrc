@@ -14,6 +14,9 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots)		# Include hidden files.
 
+# path stuff
+PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
+
 # vi mode
 bindkey -v
 export KEYTIMEOUT=1
@@ -82,6 +85,11 @@ fvi() {
 	nvim "$(find -type f | fzf)"
 }
 
+f() {
+    fff "$@"
+    cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
+}
+
 keys() {
 xmodmap ~/.Xmodmap &
 xset r rate 300 50 &
@@ -103,8 +111,8 @@ compinit
 
 
 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+#source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 #source ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
 
 

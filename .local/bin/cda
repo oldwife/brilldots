@@ -1,0 +1,3 @@
+#!/bin/sh
+locals="$( find -type d | fzf )"
+cd $locals

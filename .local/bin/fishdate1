@@ -1,0 +1,4 @@
+#!/bin/bash
+source ~/.cache/wal/colors.sh
+DATE=$( date '+%H:%M' )
+echo "^c$color2^^b$color5^$DATE "

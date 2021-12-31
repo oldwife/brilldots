@@ -18,6 +18,7 @@ if [ -n "$THEME" ]; then
         wal -ql --theme $THEME
     else
         wal -q --theme $THEME
+        cp ~/.cache/wal/colors.sh ~/.config/bashwal/colorschemes/$THEME
     fi
 else
     wal -q --theme /tmp/fzwal-backup.json

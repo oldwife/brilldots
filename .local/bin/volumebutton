@@ -1,0 +1,10 @@
+#!/bin/sh
+devices_paired=$(bluetoothctl paired-devices | grep Device | cut -d ' ' -f 2)
+
+for device in $devices_paired; do
+device_info=$(bluetoothctl info "$device" | grep "Connected: yes" )
+[[ -z "$device_info" ]] || connected="$connected device connected"
+done
+
+mute=$([[ -z $connected ]] && printf 'b~' || printf 'bb')
+echo $mute

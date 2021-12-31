@@ -1,2 +1,4 @@
 #!/bin/sh
 pacman -Ssq | fzf --multi --preview-window=up --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S
+#choice=$( pacman -Ssq | dmenu -l 50 )
+#st -e "sudo pacman -S $choice"

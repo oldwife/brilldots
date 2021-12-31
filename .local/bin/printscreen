@@ -1,0 +1,10 @@
+#!/bin/sh
+source ~/.cache/wal/colors.sh
+case $1 in 
+	-s ) scrot --select /tmp/scrot.png ;;
+	-f ) scrot /tmp/scrot.png          ;;
+	 * ) scrot /tmp/scrot.png          ;;
+esac
+dmenucmd="dmenu -sb $color0 -sf $color5 -nf $color0 -nb $color5 -l 20"
+filename=$( echo "filename" | $dmenucmd )
+mv /tmp/scrot.png ~/Pictures/scrots/$filename.png

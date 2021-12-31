@@ -10,4 +10,4 @@ fi
 if [[ $ad = "on-line" ]]; then ch='#'
 fi
 
-echo "^c$color10^$ch$be"
+echo "^c$color18^$ch$be"
