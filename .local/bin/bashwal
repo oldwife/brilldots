@@ -2,7 +2,7 @@
 cachepath=~/.cache/wal
 configpath=~/.config/bashwal/colorschemes
 source $cachepath/colors.sh
-dmenucmd="dmenu -sb $color0 -sf $color6 -nf $color0 -nb $color6 -l 20 -z 200 -i"
+dmenucmd="dmenu -sb $color0 -sf $color6 -nf $color0 -nb $color6 -l 20 -i -fn "misctamsyn:size=11""
 
 selecttheme() {
 themesel=$( ls $HOME/.config/bashwal/colorschemes/ | $dmenucmd )
@@ -10,18 +10,13 @@ cp ~/.config/bashwal/colorschemes/$themesel $cachepath/colors.sh
 source $configpath/$themesel
 }
 
-reloadbar() {
-	kill -34 $(cat ~/.cache/pidofbar)
-}
-
 case $1 in 
-	-t) selecttheme ; reloadbar ;;
+	-t) selecttheme;;
 esac
 
 setwallpaper() {
-#[ "$wallpaper" = "None" ] && wallpaper=$color6
-#xsetroot -solid "$wallpaper"
-~/./.fehbg
+[ "$wallpaper" = "None" ] && wallpaper=$color0
+xsetroot -solid "$wallpaper"
 }
 
 colorsXresources() {
@@ -33,6 +28,7 @@ colorsXresources() {
 *.foreground:       $foreground
 *.background:       $background
 emacs*foreground:   $foreground
+
 emacs*background:   $background
 URxvt*foreground:   $foreground
 XTerm*foreground:   $foreground
@@ -138,10 +134,13 @@ sequences="\033]10;$color7\007\033]11;$background\007\033]12;$color7\007\033]13;
     done
 }
 
-#colorssh
+colorsbitburner() {
+echo '{"primarylight":"'$color4'","primary":"'$color7'","primarydark":"'$color1'","successlight":"'$color10'","success":"'$color2'","successdark":"'$color2'","errorlight":"'$color9'","error":"'$color1'","errordark":"'$color1'","secondarylight":"'$color8'","secondary":"'$color8'","secondarydark":"'$color8'","warninglight":"'$color11'","warning":"'$color3'","warningdark":"'$color3'","infolight":"'$color4'","info":"'$color4'","infodark":"'$color4'","welllight":"'$color8'","well":"'$color8'","white":"'$color15'","black":"#000","hp":"'$color1'","money":"'$color3'","hack":"'$color2'","combat":"'$color6'","cha":"'$color5'","int":"'$color4'","rep":"'$color1'","disabled":"'$color6'","backgroundprimary":"'$background'","backgroundsecondary":"'$background'","button":"'$background'"}' | xclip -selection c
+}
+
+#colorsbitburner
 setwallpaper
 colorstty
 colorsXresources
 colorsjson
 dwmc xrdb 
-[ "$1" = "-t" ] && kill -34 $(cat ~/.cache/pidofbar)

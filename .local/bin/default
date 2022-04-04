@@ -1,5 +1,0 @@
-#!/bin/sh
-while true; do
-	sbar
-	sleep 2
-done

@@ -1,6 +1,0 @@
-#!/bin/sh
-source ~/.cache/wal/colors.sh
-scrot /tmp/scrot.png
-filename=$( echo "filename" | dmenu -sb $color6 -sf $background )
-mv /tmp/scrot.png ~/Pictures/scrots/$filename.png
-

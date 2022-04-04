@@ -1,8 +1,78 @@
-# Luke's config for the Zoomer Shell
+##########################
+###enviroment variables###
+##########################
+export EDITOR="nvim"
+export TERM="st"
+#export MANPAGER="nvim -c 'set ft=man' -"
+PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
+
+###########
+###alias###
+###########
+alias vim='nvim'
+alias ls='ls --color --group-directories-first -w 1'
+alias smi='sudo make install'
+alias xrdbset='[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources &'
+alias keys='xmodmap ~/.Xmodmap ; xset r rate 300 50 ; xcape -e 'Super_L=Escape' ; xcape -e 'Super_R=Escape''
 
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+PS1="%B%{$fg[blue]%}{%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[magenta]%}%M%{$fg[red]%}%~%{$fg[cyan]%}}%{$fg[yellow]%}# "
+
+###############
+###functions###
+###############
+
+#copies file/folder path to xclip
+yy() {
+[ $# -eq 0 ] && echo "no file/folder in arg" || echo $(pwd)"/"$1 | xclip -selection c
+}
+
+#cp -r from xclip, see yy ^
+p() {
+[ $# -eq 0 ] && cp -r $( xclip -selection c -o ) $( xclip -selection c -o | awk -F/ '{print $NF}') || cp -r $( xclip -selection c -o ) $1
+}
+
+#this runs ls when you cd into directory
+function chpwd() {
+    emulate -L zsh
+    ls --color --group-directories-first -w 1
+}
+
+#uses fzf to cd into dir
+cds() {
+	cd "$( find -type d | fzf)" 
+}
+
+#opens files using default program
+open() {
+	xdg-open "$(find -type f | fzf)"
+}
+
+#searches for file and edits in vim
+fvi() {
+	nvim "$(find -type f | fzf)"
+}
+
+#pacman/yay fzf tui
+fzpac(){
+	case "$1" in
+		-R) pacman -Qq | fzf --multi --preview-window=up --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns ;;
+		-aur|-yay) yay -Pc | fzf --multi --preview-window=up --preview 'yay -Si {1}' | tr -d 'AUR' | xargs -ro yay -S ;;
+		-S|*) pacman -Ssq | fzf --multi --preview-window=up --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S ;;
+	esac
+}
+
+
+#############
+###options###
+#############
+
+#cmdhistoryfile
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 setopt interactive_comments
@@ -14,8 +84,9 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots)		# Include hidden files.
 
-# path stuff
-PATH="${HOME}/bin:${HOME}/.local/bin:${PATH}"
+#############
+###vi-mode###
+#############
 
 # vi mode
 bindkey -v
@@ -31,8 +102,8 @@ bindkey -v '^?' backward-delete-char
 # Change cursor shape for different vi modes.
 function zle-keymap-select () {
     case $KEYMAP in
-        vicmd) echo -ne '\e[1 q';;      # block
-        viins|main) echo -ne '\e[5 q';; # beam
+        vicmd) echo -ne '\e[1 q' ;;      # block
+        viins|main) echo -ne '\e[5 q' ;; # beam
     esac
 }
 zle -N zle-keymap-select
@@ -48,56 +119,29 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
+#changes cursor shape and prompt
+oldPS1="$PS1"
+function zle-line-init zle-keymap-select {
 
-function chpwd() {
-    emulate -L zsh
-    ls --color --group-directories-first -w 1
-}
+    case $KEYMAP in
+        vicmd) echo -ne '\e[1 q' ;;      # block
+        viins|main) echo -ne '\e[5 q' ;; # beam
+    esac
 
-alias vim='nvim'
-alias lsa='ls --color --group-directories-first -w 1'
-alias lsaa='ls --color --group-directories-first -w 1 -a'
-alias smi='sudo make install'
-alias fd='cd'
-alias xrdbset='[[ -f ~/.Xresources ]] && xrdb -merge -I$HOME ~/.Xresources &'
-#cool cd command using fzf
-#stole from bugswriter
-#https://www.youtube.com/watch?v=_xxTcKJMnWQ
-cds() {
-	cd "$( find -type d | fzf)" 
+    VIM_NORMAL_PROMPT="%B%{$fg[blue]%}{%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[magenta]%}%M%{$fg[red]%} %~%{$fg[cyan]%}}%{$fg[yellow]%}# "
+    VIM_INSERT_PROMPT="%B%{$fg[blue]%}{%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[magenta]%}%M%{$fg[green]%} %~%{$fg[cyan]%}}%{$fg[yellow]%}# "
+    PS1="${${KEYMAP/vicmd/$VIM_NORMAL_PROMPT}/(main|viins)/$VIM_INSERT_PROMPT}"
+    PS2=$PS1
+    RPS1=""
+    RPS2=""
+    zle reset-prompt
 }
+zle -N zle-line-init
+zle -N zle-keymap-select
 
-fds() {
-	cd "$( find -type d | fzf)" 
-}
-#cool opening command also stolen from 
-#bugswriter
-#https://www.youtube.com/watch?v=_xxTcKJMnWQ
-open() {
-	devour xdg-open "$(find -type f | fzf)"
-}
-
-fvi() {
-	nvim "$(find -type f | fzf)"
-}
-
-f() {
-    fff "$@"
-    cd "$(cat "${XDG_CACHE_HOME:=${HOME}/.cache}/fff/.fff_d")"
-}
-
-keys() {
-xmodmap ~/.Xmodmap &
-xset r rate 300 50 &
-xcape -e 'Super_L=Escape' &
-xcape -e 'Super_R=Escape'
-}
-
-#bindkey -e
+##########
+###misc###
+##########
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/sailfish/.zshrc'
@@ -105,15 +149,8 @@ zstyle :compinstall filename '/home/sailfish/.zshrc'
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
-#irohbonsaiold
-#fortune
-# Load syntax highlighting; should be last.
 
-
-
-#source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-#source ~/.config/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
-
-
-
+########################
+###syntaxhighlighting###
+########################
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
