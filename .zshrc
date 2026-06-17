@@ -1,7 +1,6 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-# test
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -64,9 +63,12 @@ zstyle ':completion:*' menu select
 alias ls='ls --color'
 alias ip='ip -color=auto'
 alias vim='nvim'
-alias lagoon='git --git-dir=$HOME/.lagoon --work-tree=$HOME'
-
 alias ttytheme='ttyscheme "$(ttyscheme -l | fzf)"'
+
+# dotfile manager
+alias lagoon='git --git-dir=$HOME/.lagoon --work-tree=$HOME'
+alias lagoon-update='lagoon add -u | lagoon commit -m "$(date +%y%m%d-%H%M) $(fortune -s)" | lagoon push -u origin main'
+
 
 # path stuff
 export EDITOR="nvim"
