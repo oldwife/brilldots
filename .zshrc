@@ -63,6 +63,7 @@ zstyle ':completion:*' menu select
 alias ls='ls --color'
 alias ip='ip -color=auto'
 alias vim='nvim'
+alias lagoon='git --git-dir=$HOME/.lagoon --work-tree=$HOME'
 
 alias ttytheme='ttyscheme "$(ttyscheme -l | fzf)"'
 
